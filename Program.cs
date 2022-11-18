@@ -1,4 +1,7 @@
-﻿static IEnumerable<string> TailFrom(string file)
+﻿using System.Text.Json.Nodes;
+using Cocona;
+
+static IEnumerable<string> TailFrom(string file)
 {
     using (var reader = File.OpenText(file))
     {
@@ -14,4 +17,44 @@
     }
 }
 
-foreach (var line in TailFrom("/tmp/test.log")) Console.WriteLine($"line read= {line}");
+static async void ComputeLogLine(string outputDirectory, string line)
+{
+    JsonNode? obj;
+    try
+    {
+        obj = JsonNode.Parse(line);
+    }
+    catch (Exception e)
+    {
+        Console.Write(e.Message);
+        return;
+    }
+
+    if (obj == null) return;
+    var routerName = obj["RouterName"]?.ToString();
+
+    await File.WriteAllTextAsync($"{outputDirectory}/{routerName}", $"{line}\n");
+}
+
+CoconaApp.Run((
+    [Option('i', Description = "Path to access log file")]
+    string logFilePath
+    ,
+    [Option('o', Description = "Path to output directory")]
+    string outputDirectory
+) =>
+{
+    if (!File.Exists(logFilePath))
+    {
+        Console.WriteLine("Input file not found");
+        Environment.Exit(1);
+    }
+
+    if (!Directory.Exists(outputDirectory))
+    {
+        Console.WriteLine("Output directory not found");
+        Environment.Exit(1);
+    }
+
+    foreach (var line in TailFrom(logFilePath)) ComputeLogLine(outputDirectory, line);
+});

@@ -1,12 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <OutputType>Exe</OutputType>
-        <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>traefik_log_separator</RootNamespace>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <OutputType>Exe</OutputType>
+        <PublishReadyToRun>true</PublishReadyToRun>
+        <PublishSingleFile>true</PublishSingleFile>
+        <RootNamespace>traefik_log_separator</RootNamespace>
+        <RuntimeIdentifier>linux-arm64</RuntimeIdentifier>
+        <SelfContained>true</SelfContained>
+        <PublishTrimmed>false</PublishTrimmed>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Cocona" Version="2.0.3"/>
+    </ItemGroup>
 
 </Project>
