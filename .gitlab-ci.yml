@@ -1,0 +1,12 @@
+---
+stages:
+  - test
+
+build:
+  image: "mcr.microsoft.com/dotnet/sdk:7.0"
+  stage: test
+  before_script:
+    - dotnet restore
+  script:
+    - dotnet build
+
